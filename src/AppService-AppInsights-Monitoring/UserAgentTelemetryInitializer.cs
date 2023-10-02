@@ -1,6 +1,7 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Net.Http.Headers;
 
 namespace AppService.AppInsights.Monitoring;
 
@@ -17,7 +18,10 @@ public class UserAgentTelemetryInitializer : ITelemetryInitializer
     {
         if (_httpContextAccessor.HttpContext is not null && telemetry is RequestTelemetry requestTelemetry)
         {
-            requestTelemetry.Context.User.UserAgent = _httpContextAccessor.HttpContext.Request.Headers["User-Agent"];
+            if (_httpContextAccessor.HttpContext.Request.Headers.TryGetValue(HeaderNames.UserAgent, out var userAgent))
+            {
+                requestTelemetry.Properties.Add(HeaderNames.UserAgent, userAgent);
+            }
         }
     }
 }
