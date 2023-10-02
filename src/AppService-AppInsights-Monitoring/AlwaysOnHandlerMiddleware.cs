@@ -15,7 +15,8 @@ public class AlwaysOnHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
-        if (httpContext.Request.Path.Equals(_rootPath) && httpContext.Request.Headers[HeaderNames.UserAgent].Equals("AlwaysOn"))
+        if (httpContext.Request.Path.Equals(_rootPath) && 
+            httpContext.Request.Headers[HeaderNames.UserAgent].Equals("AlwaysOn"))
         {
             httpContext.Response.StatusCode = (int)HttpStatusCode.NoContent;
             return;
