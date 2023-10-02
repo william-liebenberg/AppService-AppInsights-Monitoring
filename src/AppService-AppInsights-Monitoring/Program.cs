@@ -1,3 +1,4 @@
+using AppService.AppInsights.Monitoring;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,15 +14,13 @@ builder.Services.AddApplicationInsightsTelemetry();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// turn the usual 400 NOT FOUND into 200 OK when the load balancer hits the root of the site every 5 minutes (for Always On setting)
+// see why Always On generates this traffic: https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal#configure-general-settings
+app.UseAlwaysOnHandlerMiddleware();
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-// turn the usual 400 NOT FOUND into 200 OK when the load balancer hits the root of the site every 5 minutes (for Always On setting)
-// see why Always On generates this traffic: https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal#configure-general-settings
-app.MapGet("/", () => { return Results.Ok(); })
-    .ExcludeFromDescription();
 
 // simple endpoint to track request, event, and trace
 app.MapGet("/test", ([FromServices]TelemetryClient tc) =>
