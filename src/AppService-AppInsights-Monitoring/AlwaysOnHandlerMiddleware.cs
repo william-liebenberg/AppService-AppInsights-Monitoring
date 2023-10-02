@@ -6,6 +6,7 @@ namespace AppService.AppInsights.Monitoring;
 public class AlwaysOnHandlerMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly PathString _rootPath = PathString.FromUriComponent("/");
 
     public AlwaysOnHandlerMiddleware(RequestDelegate next)
     {
@@ -14,7 +15,7 @@ public class AlwaysOnHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
-        if (httpContext.Request.Headers[HeaderNames.UserAgent].Contains("AlwaysOn"))
+        if (httpContext.Request.Path.Equals(_rootPath) && httpContext.Request.Headers[HeaderNames.UserAgent].Equals("AlwaysOn"))
         {
             httpContext.Response.StatusCode = (int)HttpStatusCode.NoContent;
             return;
