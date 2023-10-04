@@ -45,7 +45,7 @@ app.MapGet("/test", ([FromServices]TelemetryClient tc) =>
     tc.TrackEvent("TEST EVENT");
     tc.TrackTrace("Hi! Ignore me, I'm just testing stuff !!!");
 
-    return "Testing!";
+    return "You got to the /test endpoint!";
 })
 .WithName("GetTest")
 .WithOpenApi();
