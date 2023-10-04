@@ -1,4 +1,5 @@
 using AppService.AppInsights.Monitoring;
+using Azure.Identity;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var aiConnStr = builder.Configuration["ApplicationInsights:ConnectionString"];
+// authenticate using default (managed identity) credentials for AppInsights
+var credential = new DefaultAzureCredential();
+builder.Services.Configure<TelemetryConfiguration>(config =>
+{
+    config.SetAzureTokenCredential(credential);
+});
 
 // When using User Secrets for local development:
 //  Strange behaviour from the Initializers when using the parameterless version of .AddApplicationInsightsTelemetry()
