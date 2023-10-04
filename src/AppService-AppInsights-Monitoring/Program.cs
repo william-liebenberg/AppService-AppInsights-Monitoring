@@ -9,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // authenticate using default (managed identity) credentials for AppInsights
-var credential = new DefaultAzureCredential();
 builder.Services.Configure<TelemetryConfiguration>(config =>
 {
+    var credential = new DefaultAzureCredential();
     config.SetAzureTokenCredential(credential);
 });
 
@@ -45,7 +45,7 @@ app.MapGet("/test", ([FromServices]TelemetryClient tc) =>
     tc.TrackEvent("TEST EVENT");
     tc.TrackTrace("Hi! Ignore me, I'm just testing stuff !!!");
 
-    return "You got to the /test endpoint!";
+    return "You got to the /test endpoint - somehow!";
 })
 .WithName("GetTest")
 .WithOpenApi();
