@@ -7,6 +7,7 @@ namespace AppService.AppInsights.Monitoring;
 public class RootRoute404Filter : ITelemetryProcessor
 {
     private readonly PathString _rootPath = PathString.FromUriComponent("/");
+    private readonly string _azureCheckAlwaysOnAgent = "AlwaysOn";
 
     private readonly ITelemetryProcessor next;
 
@@ -22,6 +23,7 @@ public class RootRoute404Filter : ITelemetryProcessor
         {
             // Check if the request is to the root route and resulted in a 401 status code
             if (requestTelemetry.Url.AbsolutePath.Equals(_rootPath) &&
+                requestTelemetry.Properties["User-Agent"] == _azureCheckAlwaysOnAgent &&
                 requestTelemetry.ResponseCode == "404") // HttpStatusCode.NotFound = 404 ... not "404"
             {
                 // Do not pass the telemetry item to the next processor
