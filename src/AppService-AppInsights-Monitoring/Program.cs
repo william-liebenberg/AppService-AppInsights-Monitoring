@@ -13,7 +13,10 @@ builder.Services.Configure<TelemetryConfiguration>(config =>
 {
     var credential = new DefaultAzureCredential();
     config.SetAzureTokenCredential(credential);
+
+    // config.TelemetryProcessorChainBuilder.Use(next => new RootRoute404Filter(next)).Build();
 });
+
 
 // When using User Secrets for local development:
 //  Strange behaviour from the Initializers when using the parameterless version of .AddApplicationInsightsTelemetry()
@@ -21,6 +24,7 @@ builder.Services.Configure<TelemetryConfiguration>(config =>
 //  By passing in the builder.Configuration ensures the Initializers and TelemetryClients are configured properly
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
 builder.Services.AddSingleton<ITelemetryInitializer, UserAgentTelemetryInitializer>();
+builder.Services.AddApplicationInsightsTelemetryProcessor<RootRoute404Filter>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -32,7 +36,7 @@ var app = builder.Build();
 
 // Mutate the usual 404 NOT FOUND into 204 OK when the front-end load balancer hits the root of the site every 5 minutes (for Always On setting)
 // See why "AlwaysOn" generates this traffic: https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal#configure-general-settings
-app.UseAlwaysOnHandlerMiddleware();
+//app.UseAlwaysOnHandlerMiddleware();
 
 app.UseSwagger();
 app.UseSwaggerUI();

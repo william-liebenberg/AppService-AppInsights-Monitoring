@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.NetworkInformation;
 using Microsoft.Net.Http.Headers;
 
 namespace AppService.AppInsights.Monitoring;
