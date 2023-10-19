@@ -13,8 +13,6 @@ builder.Services.Configure<TelemetryConfiguration>(config =>
 {
     var credential = new DefaultAzureCredential();
     config.SetAzureTokenCredential(credential);
-
-    // config.TelemetryProcessorChainBuilder.Use(next => new RootRoute404Filter(next)).Build();
 });
 
 
